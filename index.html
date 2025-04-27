@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio of Ayan Aalam Zuber Aalam, Web Developer, Graphic Designer, and CSE Student">
+  <title>Ayan Aalam - Portfolio</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.9/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Poppins', sans-serif; scroll-behavior: smooth; }
+    .hero-bg { background: linear-gradient(135deg, #60a5fa, #a78bfa); }
+    .dark .hero-bg { background: linear-gradient(135deg, #1e3a8a, #4c1d95); }
+    .section-animate { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+    .section-animate.visible { opacity: 1; transform: translateY(0); }
+    .hover-scale { transition: transform 0.3s ease; }
+    .hover-scale:hover { transform: scale(1.05); }
+    .skill-bar { height: 10px; border-radius: 5px; transition: width 1s ease-in-out; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const Navbar = () => {
+      const [isDark, setIsDark] = useState(false);
+      const [activeSection, setActiveSection] = useState('home');
+
+      const toggleDarkMode = () => {
+        setIsDark(!isDark);
+        document.documentElement.classList.toggle('dark');
+      };
+
+      const navItems = ['home', 'about', 'graphic-design', 'projects', 'skills', 'contact'];
+
+      useEffect(() => {
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                setActiveSection(entry.target.id);
+                entry.target.classList.add('visible');
+              }
+            });
+          },
+          { threshold: 0.3 }
+        );
+        sections.forEach((section) => observer.observe(section));
+        return () => sections.forEach((section) => observer.unobserve(section));
+      }, []);
+
+      return (
+        <nav className="sticky top-0 bg-white dark:bg-gray-900 shadow-lg z-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400">Ayan Aalam</h1>
+            <div className="flex space-x-8">
+              {navItems.map((item) => (
+                <a
+                  key={item}
+                  href={`#${item}`}
+                  className={`capitalize text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 ${
+                    activeSection === item ? 'border-b-2 border-blue-600' : ''
+                  }`}
+                >
+                  {item.replace('-', ' ')}
+                </a>
+              ))}
+            </div>
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-full bg-gray-200 dark:bg-gray-700"
+            >
+              {isDark ? '☀️' : '🌙'}
+            </button>
+          </div>
+        </nav>
+      );
+    };
+
+    const Hero = () => (
+      <section id="home" className="hero-bg h-screen flex items-center justify-center text-center text-white section-animate">
+        <div>
+          <h1 className="text-5xl md:text-7xl font-bold animate-fade-in">Ayan Aalam Zuber Aalam</h1>
+          <p className="text-xl md:text-2xl mt-4">
+            Web Developer | Graphic Designer | CSE Student | Innovator
+          </p>
+          <a
+            href="#contact"
+            className="mt-6 inline-block px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg shadow hover:bg-blue-100 hover-scale"
+          >
+            Get in Touch
+          </a>
+        </div>
+      </section>
+    );
+
+    const About = () => (
+      <section id="about" className="py-20 bg-gray-100 dark:bg-gray-800 section-animate">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-10">About Me</h2>
+          <div className="flex flex-col md:flex-row items-center">
+            <div className="md:w-1/2 mb-6 md:mb-0">
+              <p className="text-lg text-gray-600 dark:text-gray-300">
+                I'm Ayan Aalam, a passionate Web Developer and Graphic Designer pursuing a BTech in Computer Science Engineering at Priyadarshini J L College of Engineering, Nagpur (expected graduation: 2026). With a strong foundation in HTML, CSS, MERN Stack, and graphic design tools like Photoshop and Figma, I love creating user-friendly websites and visually stunning designs. My academic journey includes a 75% in SSC (2020) and 78% in HSC (2022), with a current CGPA of 6.5. I'm driven by innovation, collaboration, and a commitment to delivering impactful projects.
+              </p>
+            </div>
+            <div className="md:w-1/2 flex justify-center">
+              <img src="/ayn.png" alt="Ayan Aalam" className="rounded-full shadow-lg hover-scale" />
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+
+    const GraphicDesign = () => {
+      const designs = [
+        { title: 'Logo Design', desc: 'Minimalist logo for a startup', img: '/logo.png' },
+        { title: 'Social Media Graphic', desc: 'Engaging post for a brand', img: '/social.jpg' },
+        { title: 'Poster Design', desc: 'Event poster with vibrant colors', img: '/poster.png' },
+      ];
+
+      return (
+        <section id="graphic-design" className="py-20 bg-white dark:bg-gray-900 section-animate">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-10">Graphic Design Showcase</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {designs.map((design) => (
+                <div key={design.title} className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover-scale">
+                  <img src={design.img} alt={design.title} className="w-full h-48 object-cover" />
+                  <div className="p-4">
+                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{design.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300">{design.desc}</p>
+                    <a href="#contact" className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline">
+                      Contact for Details
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const Projects = () => {
+      const projects = [
+        {
+          title: 'Selector-Applicant Simulation Software',
+          desc: 'Developed for DRDO’s Recruitment and Assessment Centre to streamline applicant evaluation.',
+          link: '#',
+        },
+        {
+          title: 'Homemade Meal Sharing Platform',
+          desc: 'A MERN Stack-based platform connecting home cooks with food enthusiasts.',
+          link: '#',
+        },
+        {
+          title: 'Offended & Trendy',
+          desc: 'A trendy e-commerce website showcasing modern fashion.',
+          link: '#',
+        },
+      ];
+
+      return (
+        <section id="projects" className="py-20 bg-gray-100 dark:bg-gray-800 section-animate">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-10">Projects</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {projects.map((project) => (
+                <div key={project.title} className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 hover-scale">
+                  <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{project.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mt-2">{project.desc}</p>
+                  <a href={project.link} className="mt-4 inline-block text-blue-600 dark:text-blue-400 hover:underline">
+                    View Project
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const Skills = () => {
+      const skills = [
+        { name: 'HTML', level: 90 },
+        { name: 'CSS', level: 85 },
+        { name: 'MERN Stack', level: 70 },
+        { name: 'Graphic Design', level: 80 },
+        { name: 'C Language', level: 75 },
+      ];
+
+      return (
+        <section id="skills" className="py-20 bg-white dark:bg-gray-900 section-animate">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-10">Skills</h2>
+            <div className="space-y-6">
+              {skills.map((skill) => (
+                <div key={skill.name}>
+                  <p className="text-gray-800 dark:text-white font-semibold">{skill.name}</p>
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                    <div
+                      className="skill-bar bg-blue-600"
+                      style={{ width: `${skill.level}%` }}
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-10">
+              <a
+                href="/resume.pdf"
+                download
+                className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 hover-scale"
+              >
+                Download Resume
+              </a>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const Contact = () => {
+      const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+      const [status, setStatus] = useState('');
+
+      const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setStatus('Sending...');
+        try {
+          const response = await fetch('http://127.0.0.1:5000/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
+          });
+          console.log('Response status:', response.status);
+          if (response.ok) {
+            setStatus('Message sent successfully!');
+            setFormData({ name: '', email: '', message: '' });
+          } else {
+            const errorText = await response.text();
+            setStatus(`Failed to send message (Status ${response.status}): ${errorText}`);
+          }
+        } catch (error) {
+          console.error('Fetch error:', error);
+          setStatus(`An error occurred: ${error.message}`);
+        }
+      };
+
+      return (
+        <section id="contact" className="py-20 bg-gray-100 dark:bg-gray-800 section-animate">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-4xl font-bold text-center text-gray-800 dark:text-white mb-10">Contact Me</h2>
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="md:w-1/2">
+                <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg">
+                  <h3 className="text-2xl font-semibold text-gray-800 dark:text-white mb-4">Get in Touch</h3>
+                  <div>
+                    <label className="block text-gray-700 dark:text-gray-300">Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className="w-full mt-2 p-2 border rounded dark:bg-gray-800 dark:text-white"
+                      required
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-gray-700 dark:text-gray-300">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className="w-full mt-2 p-2 border rounded dark:bg-gray-800 dark:text-white"
+                      required
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <label className="block text-gray-700 dark:text-gray-300">Message</label>
+                    <textarea
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      className="w-full mt-2 p-2 border rounded dark:bg-gray-800 dark:text-white"
+                      rows="4"
+                      required
+                    ></textarea>
+                  </div>
+                  <button
+                    onClick={handleSubmit}
+                    className="mt-6 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 hover-scale"
+                  >
+                    Send Message
+                  </button>
+                  {status && <p className="mt-4 text-gray-600 dark:text-gray-300">{status}</p>}
+                </div>
+              </div>
+              <div className="md:w-1/2 flex flex-col justify-center">
+                <p className="text-gray-600 dark:text-gray-300 mb-4">
+                  Feel free to reach out for collaborations, freelance work, or just to say hi!
+                </p>
+                <div className="flex space-x-4">
+                  <a href="https://www.linkedin.com/in/ayan-aalam-518a1b2b5/" className="text-blue-600 dark:text-blue-400 hover:underline">LinkedIn</a>
+                  <a href="https://github.com/Aynisonwork" className="text-blue-600 dark:text-blue-400 hover:underline">GitHub</a>
+                  <a href="https://behance.net" className="text-blue-600 dark:text-blue-400 hover:underline">Behance</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const App = () => (
+      <div>
+        <Navbar />
+        <Hero />
+        <About />
+        <GraphicDesign />
+        <Projects />
+        <Skills />
+        <Contact />
+      </div>
+    );
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
